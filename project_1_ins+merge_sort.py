@@ -133,6 +133,8 @@ if __name__ == "__main__":
     # plt.legend()
     # plt.grid(True)
     # plt.show()
+
+    
     sizes = [1000, 5000, 10000, 20000, 50000,100000, 500000, 1000000, 10000000]  # You can adjust or extend this list
     S_values = list(range(2, 1001))
     best_S = []
