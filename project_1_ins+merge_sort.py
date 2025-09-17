@@ -134,11 +134,11 @@ if __name__ == "__main__":
     # plt.grid(True)
     # plt.show()
 
-    
-    sizes = [1000, 5000, 10000, 20000, 50000,100000, 500000, 1000000, 10000000]  # You can adjust or extend this list
-    S_values = list(range(2, 1001))
+
+    sizes = [50, 500, 1000, 5000, 10000, 20000, 50000,100000, 500000, 1000000, 10000000]  # You can adjust or extend this list
+    S_values = list(range(2, 101))  # Testing S values from 2 to 100
     best_S = []
-    best_times = []
+    best_times = [] 
 
     for n in sizes:
         print(f"\nTesting array size n = {n}")
@@ -166,6 +166,7 @@ if __name__ == "__main__":
             start = time.perf_counter()
             insertion_merge_sort_fixed(arr_copy, S)
             end = time.perf_counter()
+            
             elapsed = end - start
             if elapsed < min_time:
                 min_time = elapsed
