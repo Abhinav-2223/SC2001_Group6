@@ -74,8 +74,47 @@ def print_d_and_pi(d, pi, iteration):
 
 # function to check if dijkstra's algorithm works correctly
 
+def verify_with_floyd_warshall(adj_matrix, start, computed_distances):
+    """
+    Use Floyd-Warshall algorithm to compute all-pairs shortest paths
+    and compare distances from start vertex
+    """
+    n = len(adj_matrix)
+    
+    # Initialize distance matrix for Floyd-Warshall
+    dist = [[float('inf')] * n for _ in range(n)]
+    
+    # Copy adjacency matrix
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                dist[i][j] = 0
+            elif adj_matrix[i][j] != float('inf'):
+                dist[i][j] = adj_matrix[i][j]
+    
+    # Floyd-Warshall algorithm
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                if dist[i][k] + dist[k][j] < dist[i][j]:
+                    dist[i][j] = dist[i][k] + dist[k][j]
+    
+    # Compare distances from start vertex
+    floyd_distances = dist[start]
+    
+    for i in range(n):
+        if computed_distances[i] != floyd_distances[i]:
+            print(f"ERROR: Vertex {i} - Floyd-Warshall: {floyd_distances[i]}, Dijkstra: {computed_distances[i]}")
+            return False
+    
+    print("✓ Dijkstra matches Floyd-Warshall results!")
+    return True
+
+
+
+
 # function to make a random adjacency matrix
-def make_random_adj_matrix(num_vertices, max_weight=10, edge_prob=0.3):
+def make_random_adj_matrix(num_vertices, max_weight=10, edge_prob=0.5):
     import random
 
     adj_matrix = [] # with row <-> and column ^
@@ -86,7 +125,8 @@ def make_random_adj_matrix(num_vertices, max_weight=10, edge_prob=0.3):
             if i == j:
                 row.append(0) # distance to self is 0, eg. B to B is 0
             else:
-                if random.random() < edge_prob: # probability of edge existing
+                rand_prob = random.random()
+                if rand_prob < edge_prob: # probability of edge existing
                     row.append(random.randint(1, max_weight))
                 else:
                     row.append(float('inf'))
@@ -101,13 +141,17 @@ def make_random_adj_matrix(num_vertices, max_weight=10, edge_prob=0.3):
 
 # Test the algorithm
 if __name__ == "__main__":
+    adj_matr = make_random_adj_matrix(5)
     print("Testing Dijkstra's Algorithm with Array-based Priority Queue")
-    print("Adjacency Matrix:", adj_matrix_test)
+    print("Adjacency Matrix:", adj_matr)
     print("Starting vertex:", start)
     print()
     
-    distances, predecessors = dijkstras(adj_matrix_test, start)
+    distances, predecessors = dijkstras(adj_matr, start)
     
     print("Final Results:")
     print("Shortest distances:", distances)
     print("Predecessors:", predecessors)
+
+    print("Verification:")
+    verify_with_floyd_warshall(adj_matr, start, distances)
